@@ -1,1 +1,1 @@
-rootProject.name = "runch"
+rootProject.name = "eati"
