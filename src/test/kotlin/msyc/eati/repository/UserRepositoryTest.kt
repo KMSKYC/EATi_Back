@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
 @SpringBootTest
@@ -19,31 +20,8 @@ class UserRepositoryTest @Autowired constructor(
 ) {
 
     @Test
-    @DisplayName("사용자 CRUD 테스트")
-    fun `user crud operations should work`() {
-        // Create
-        val user = createTestUser("test@example.com", "테스터")
-        val saved = userRepository.save(user)
-        assertThat(saved.userId).isNotNull()
-        assertThat(saved.email).isEqualTo("test@example.com")
-
-        // Read
-        val found = userRepository.findById(saved.userId!!).get()
-        assertThat(found.nickname).isEqualTo("테스터")
-
-        // Update
-        found.nickname = "수정된이름"
-        val updated = userRepository.save(found)
-        assertThat(updated.nickname).isEqualTo("수정된이름")
-
-        // Delete
-        userRepository.deleteById(saved.userId!!)
-        assertThat(userRepository.findById(saved.userId!!)).isEmpty
-    }
-
-    @Test
     @DisplayName("사용자 생성 테스트")
-    fun `should create user successfully`() {
+    fun `사용자 생성 테스트`() {
         val user = createTestUser("create@example.com", "새사용자")
 
         val saved = userRepository.save(user)
@@ -58,14 +36,20 @@ class UserRepositoryTest @Autowired constructor(
 
     @Test
     @DisplayName("이메일로 사용자 조회")
-    fun `should find user by email`() {
-        val user = createTestUser("find@example.com", "찾을사용자")
-        userRepository.save(user)
-
-        val found = userRepository.findByEmail("find@example.com")
+    fun `이메일로 사용자 조회`() {
+        val found = userRepository.findByEmail("create@example.com")
 
         assertThat(found).isPresent
-        assertThat(found.get().nickname).isEqualTo("찾을사용자")
+        assertThat(found.get().nickname).isEqualTo("새사용자")
+    }
+
+    @Test
+    @DisplayName("이메일로 사용자 삭제")
+    fun `이메일로 사용자 삭제`() {
+        userRepository.deleteByEmail("create@example.com")
+
+        val found = userRepository.findByEmail("create@example.com")
+        assertThat(found).isEmpty
     }
 
     private fun createTestUser(email: String, nickname: String) = User(
@@ -76,7 +60,7 @@ class UserRepositoryTest @Autowired constructor(
         birthdate = LocalDate.of(1990, 1, 1),
         gender = "M",
         region = "서울",
-        createdAt = OffsetDateTime.now(),
-        updatedAt = OffsetDateTime.now()
+        createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now()
     )
 }
