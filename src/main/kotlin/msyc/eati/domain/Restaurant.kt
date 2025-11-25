@@ -11,9 +11,8 @@ data class Restaurant(
     @Column(name = "restaurant_id", length = 10, nullable = false, updatable = false)
     var restaurantId: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    var category: Category,
+    @Column(name = "category_id", nullable = false)
+    var categoryId: String? = null,
 
     @Column(nullable = false)
     var name: String,

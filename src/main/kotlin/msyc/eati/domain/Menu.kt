@@ -11,9 +11,8 @@ data class Menu(
     @Column(name = "menu_id", length = 10, nullable = false, updatable = false)
     var menuId: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    var category: Category,
+    @Column(name = "category_id", length = 10, nullable = false, updatable = false)
+    var categoryId: String? = null,
 
     @Column
     var name: String? = null,

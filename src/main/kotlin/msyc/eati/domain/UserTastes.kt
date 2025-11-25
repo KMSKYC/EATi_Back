@@ -1,31 +1,33 @@
 package msyc.eati.domain
 
 import jakarta.persistence.*
+import msyc.eati.common.StringListConverter
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "user_tastes")
+@Table(name = "users_tastes")
 data class UserTastes(
     @Id
     @Column(name = "user_id", length = 10, nullable = false, updatable = false)
     var userId: String? = null,
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "user_id")
-    var user: User,
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "liked_category_ids")
+    var likedCategoryIds: List<String>? = null,
 
-    @Column(name = "like_category")
-    var preferredCategories: String? = null,
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "disliked_category_ids")
+    var disLikedCategoryIds: List<String>? = null,
 
-    @Column(name = "dislike_category")
-    var dislikedCategories: String? = null,
-
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "recent_menus")
-    var recentMenus: String? = null,
+    var recentMenus: List<String>? = null,
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "restrictions")
-    var menuRestrictions: String? = null,
+    var menuRestrictions: List<String>? = null,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime,

@@ -14,21 +14,25 @@ import java.time.LocalDateTime
 @ActiveProfiles("test")
 @DisplayName("Restaurant Repository 테스트")
 class RestaurantRepositoryTest @Autowired constructor(
-    private val restaurantRepository: RestaurantRepository,
-    private val categoryRepository: CategoryRepository
+    private val restaurantRepository: RestaurantRepository
 ) {
 
     @Test
     @DisplayName("레스토랑 생성 테스트")
     fun `레스토랑 생성 테스트`() {
-        val category = getOrCreateCategory("양식")
-        val restaurant = createTestRestaurant("테스트 레스토랑", category)
+        val category = Category(
+            name = "양식",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        ).apply { prePersist() }
+
+        val restaurant = createTestRestaurant("테스트 레스토랑", category.categoryId!!)
 
         val saved = restaurantRepository.save(restaurant)
 
         assertThat(saved.restaurantId).isNotNull()
         assertThat(saved.name).isEqualTo("테스트 레스토랑")
-        assertThat(saved.category.name).isEqualTo("양식")
+        assertThat(saved.categoryId).isEqualTo(category.categoryId)
         assertThat(saved.createdAt).isNotNull()
         assertThat(saved.updatedAt).isNotNull()
     }
@@ -51,21 +55,9 @@ class RestaurantRepositoryTest @Autowired constructor(
         assertThat(found).isEmpty
     }
 
-    private fun getOrCreateCategory(name: String): Category {
-        return categoryRepository.findByName(name).orElseGet {
-            categoryRepository.save(
-                Category(
-                    name = name,
-                    createdAt = LocalDateTime.now(),
-                    updatedAt = LocalDateTime.now()
-                )
-            )
-        }
-    }
-
-    private fun createTestRestaurant(name: String, category: Category) = Restaurant(
+    private fun createTestRestaurant(name: String, categoryId: String) = Restaurant(
         name = name,
-        category = category,
+        categoryId = categoryId,
         address = "서울시 강남구 테스트동 123",
         description = "테스트 레스토랑 설명",
         createdAt = LocalDateTime.now(),

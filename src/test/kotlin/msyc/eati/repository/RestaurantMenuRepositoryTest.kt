@@ -17,22 +17,33 @@ import java.time.LocalDateTime
 @DisplayName("RestaurantMenu Repository 테스트")
 class RestaurantMenuRepositoryTest @Autowired constructor(
     private val restaurantMenuRepository: RestaurantMenuRepository,
-    private val restaurantRepository: RestaurantRepository,
-    private val categoryRepository: CategoryRepository
 ) {
 
     @Test
     @DisplayName("레스토랑 메뉴 생성 테스트")
     fun `레스토랑 메뉴 생성 테스트`() {
-        val category = getOrCreateCategory("중식")
-        val restaurant = getOrCreateRestaurant("테스트 중식당", category)
-        val menu = createTestRestaurantMenu("짜장면", restaurant, category)
+        val category = Category(
+            name = "중식",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        ).apply { prePersist() }
+
+        val restaurant = Restaurant(
+            name = "테스트 중식당",
+            categoryId = category.categoryId,
+            address = "서울시 테스트구",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        ).apply { prePersist() }
+
+        val menu = createTestRestaurantMenu("짜장면", restaurant.restaurantId!!, category.categoryId!!)
 
         val saved = restaurantMenuRepository.save(menu)
 
         assertThat(saved.menuId).isNotNull()
         assertThat(saved.name).isEqualTo("짜장면")
-        assertThat(saved.restaurant.name).isEqualTo("테스트 중식당")
+        assertThat(saved.restaurantId).isEqualTo(restaurant.restaurantId)
+        assertThat(saved.categoryId).isEqualTo(category.categoryId)
         assertThat(saved.price).isEqualTo(BigDecimal("8000.00"))
         assertThat(saved.createdAt).isNotNull()
         assertThat(saved.updatedAt).isNotNull()
@@ -56,36 +67,10 @@ class RestaurantMenuRepositoryTest @Autowired constructor(
         assertThat(found).isEmpty
     }
 
-    private fun getOrCreateCategory(name: String): Category {
-        return categoryRepository.findByName(name).orElseGet {
-            categoryRepository.save(
-                Category(
-                    name = name,
-                    createdAt = LocalDateTime.now(),
-                    updatedAt = LocalDateTime.now()
-                )
-            )
-        }
-    }
-
-    private fun getOrCreateRestaurant(name: String, category: Category): Restaurant {
-        return restaurantRepository.findByName(name).orElseGet {
-            restaurantRepository.save(
-                Restaurant(
-                    name = name,
-                    category = category,
-                    address = "서울시 테스트구",
-                    createdAt = LocalDateTime.now(),
-                    updatedAt = LocalDateTime.now()
-                )
-            )
-        }
-    }
-
-    private fun createTestRestaurantMenu(name: String, restaurant: Restaurant, category: Category) = RestaurantMenu(
+    private fun createTestRestaurantMenu(name: String, restaurantId: String, categoryId: String) = RestaurantMenu(
         name = name,
-        restaurant = restaurant,
-        category = category,
+        restaurantId = restaurantId,
+        categoryId = categoryId,
         price = BigDecimal("8000.00"),
         description = "테스트 메뉴 설명",
         createdAt = LocalDateTime.now(),

@@ -21,14 +21,19 @@ class MenuRepositoryTest @Autowired constructor(
     @Test
     @DisplayName("메뉴 생성 테스트")
     fun `메뉴 생성 테스트`() {
-        val category = getOrCreateCategory("한식")
-        val menu = createTestMenu("김치찌개", category)
+        val category = Category(
+            name = "한식",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        ).apply { prePersist() }
+
+        val menu = createTestMenu("김치찌개", category.categoryId!!)
 
         val saved = menuRepository.save(menu)
 
         assertThat(saved.menuId).isNotNull()
         assertThat(saved.name).isEqualTo("김치찌개")
-        assertThat(saved.category.name).isEqualTo("한식")
+        assertThat(saved.categoryId).isEqualTo(category.categoryId)
         assertThat(saved.createdAt).isNotNull()
         assertThat(saved.updatedAt).isNotNull()
     }
@@ -51,21 +56,9 @@ class MenuRepositoryTest @Autowired constructor(
         assertThat(found).isEmpty
     }
 
-    private fun getOrCreateCategory(name: String): Category {
-        return categoryRepository.findByName(name).orElseGet {
-            categoryRepository.save(
-                Category(
-                    name = name,
-                    createdAt = LocalDateTime.now(),
-                    updatedAt = LocalDateTime.now()
-                )
-            )
-        }
-    }
-
-    private fun createTestMenu(name: String, category: Category) = Menu(
+    private fun createTestMenu(name: String, categoryId: String) = Menu(
         name = name,
-        category = category,
+        categoryId = categoryId,
         description = "테스트 메뉴 설명",
         createdAt = LocalDateTime.now(),
         updatedAt = LocalDateTime.now()
