@@ -1,7 +1,7 @@
-package msyc.eati.domain
+package msyc.eati.domain.model
 
 import jakarta.persistence.*
-import msyc.eati.common.IdGenerator
+import msyc.eati.common.util.IdGenerator
 import java.time.LocalDateTime
 
 @Entity

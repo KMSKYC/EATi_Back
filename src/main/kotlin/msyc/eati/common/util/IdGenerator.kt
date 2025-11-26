@@ -1,4 +1,4 @@
-package msyc.eati.common
+package msyc.eati.common.util
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils
 import java.security.SecureRandom

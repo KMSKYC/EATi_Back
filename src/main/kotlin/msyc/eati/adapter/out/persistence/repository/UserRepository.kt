@@ -1,6 +1,6 @@
-package msyc.eati.repository
+package msyc.eati.adapter.out.persistence.repository
 
-import msyc.eati.domain.UserTastes
+import msyc.eati.domain.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
@@ -8,10 +8,11 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Repository
-interface UserTastesRepository : JpaRepository<UserTastes, String> {
-    fun findByUserId(userId: String): Optional<UserTastes>
+interface UserRepository : JpaRepository<User, String> {
+    fun findByEmail(email: String): Optional<User>
+    fun existsByEmail(email: String): Boolean
 
     @Modifying
     @Transactional
-    fun deleteByUserId(userId: String)
+    fun deleteByEmail(email: String)
 }

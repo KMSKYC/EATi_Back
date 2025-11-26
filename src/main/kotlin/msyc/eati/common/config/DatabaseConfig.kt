@@ -1,4 +1,4 @@
-package msyc.eati.config
+package msyc.eati.common.config
 
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.context.annotation.Configuration
