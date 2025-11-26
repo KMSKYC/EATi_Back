@@ -1,6 +1,7 @@
 package msyc.eati.repository
 
-import msyc.eati.domain.Category
+import msyc.eati.adapter.out.persistence.repository.CategoryRepository
+import msyc.eati.domain.model.Category
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

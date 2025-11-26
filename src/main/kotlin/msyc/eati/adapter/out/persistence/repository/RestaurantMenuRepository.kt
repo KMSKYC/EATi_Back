@@ -1,6 +1,6 @@
-package msyc.eati.repository
+package msyc.eati.adapter.out.persistence.repository
 
-import msyc.eati.domain.RestaurantMenu
+import msyc.eati.domain.model.RestaurantMenu
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
