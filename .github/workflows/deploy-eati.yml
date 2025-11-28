@@ -42,7 +42,7 @@ jobs:
       # jar 파일 직접 복사
       - name: Copy jar to OCI server
         run: |
-          scp -i ~/.ssh/eati_key -P ${{ secrets.OCI_PORT }} build/libs/*.jar \
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/eati_key -P ${{ secrets.OCI_PORT }} build/libs/*.jar \
           ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:/srv/eati/
 
       # 배포 서비스 재시작
