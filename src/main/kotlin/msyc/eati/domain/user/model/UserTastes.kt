@@ -1,4 +1,4 @@
-package msyc.eati.domain.model
+package msyc.eati.domain.user.model
 
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
