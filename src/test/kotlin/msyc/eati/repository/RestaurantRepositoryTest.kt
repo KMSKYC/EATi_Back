@@ -1,8 +1,8 @@
 package msyc.eati.repository
 
-import msyc.eati.adapter.out.persistence.repository.RestaurantRepository
-import msyc.eati.domain.model.Category
-import msyc.eati.domain.model.Restaurant
+import msyc.eati.adapter.out.persistence.menu.RestaurantRepository
+import msyc.eati.domain.menu.model.Category
+import msyc.eati.domain.menu.model.Restaurant
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

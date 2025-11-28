@@ -1,7 +1,7 @@
 package msyc.eati.repository
 
-import msyc.eati.adapter.out.persistence.repository.UserRepository
-import msyc.eati.domain.model.User
+import msyc.eati.adapter.out.persistence.user.UserRepository
+import msyc.eati.domain.user.model.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
