@@ -56,35 +56,35 @@ jobs:
           script: |
             set -e
 
-            # 배포 디렉토리 생성 (없는 경우)
+            # 배포 디렉토리 준비
             mkdir -p /home/opc/eati-deploy
-
             cd /home/opc/eati-deploy
 
-            # 가장 최근 jar 선택
+            # 최신 JAR 파일 확인
             LATEST_JAR=$(ls -t *.jar | head -n 1)
             echo "Using JAR: $LATEST_JAR"
 
-            # 서비스 중지 (파일 교체 전)
+            # 기존 서비스 중지
             sudo systemctl stop eati
 
             # JAR 파일 교체
             sudo mv "/home/opc/eati-deploy/$LATEST_JAR" /srv/eati/app.jar
             sudo chown eati:eati /srv/eati/app.jar
             sudo chmod 755 /srv/eati/app.jar
-
-            # SELinux 컨텍스트 복구
             sudo restorecon -v /srv/eati/app.jar
 
-            # 이전 JAR 파일 정리
+            # 임시 파일 정리
             rm -f /home/opc/eati-deploy/*.jar
 
-            # 서비스 시작
+            # 서비스 재시작
             sudo systemctl start eati
-            
-            # 상태 확인 (5초 대기 후)
             sleep 5
             sudo systemctl status eati --no-pager -l
-            
-            # Health check
-            curl -f http://localhost:8080/health || echo "Health check failed!"
+
+            # NGINX 재시작
+            sudo systemctl restart nginx
+
+            # 배포 확인
+            curl -f http://localhost:8080/health || echo "Spring Boot 응답 실패"
+            sleep 2
+            curl -f http://localhost/ || echo "NGINX 프록시 실패"
