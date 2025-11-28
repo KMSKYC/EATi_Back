@@ -32,21 +32,24 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean bootJar
 
-      # SSH key 생성 (Actions 환경에만 존재)
+      # Actions 런너 안에서 SSH 키 세팅
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.OCI_SSH_KEY }}" > ~/.ssh/eati_key
           chmod 600 ~/.ssh/eati_key
 
-      # jar 파일 직접 복사
-      - name: Copy jar to OCI server
+      # 1단계: jar를 opc 홈 디렉토리 아래로 복사
+      - name: Copy jar to OCI server (to opc home)
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/eati_key -P ${{ secrets.OCI_PORT }} build/libs/*.jar \
-          ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:/srv/eati/
+          scp -o StrictHostKeyChecking=no \
+              -i ~/.ssh/eati_key \
+              -P ${{ secrets.OCI_PORT }} \
+              build/libs/*.jar \
+              ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:/home/opc/eati-deploy/
 
-      # 배포 서비스 재시작
-      - name: Restart eati service
+      # 2단계: 서버 안에서 /srv/eati/app.jar 로 옮기고 서비스 재시작
+      - name: Move jar and restart eati service
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.OCI_HOST }}
@@ -54,9 +57,18 @@ jobs:
           port: ${{ secrets.OCI_PORT }}
           key: ${{ secrets.OCI_SSH_KEY }}
           script: |
-            cd /srv/eati
+            set -e
+
+            cd /home/opc/eati-deploy
+
+            # 가장 최근 jar 선택
             LATEST_JAR=$(ls -t *.jar | head -n 1)
-            sudo mv "$LATEST_JAR" app.jar
-            sudo chown eati:eati app.jar
+            echo "Using JAR: $LATEST_JAR"
+
+            # /srv/eati 로 이동해서 app.jar로 교체
+            sudo mv "/home/opc/eati-deploy/$LATEST_JAR" /srv/eati/app.jar
+            sudo chown eati:eati /srv/eati/app.jar
+
+            # 서비스 재시작
             sudo systemctl restart eati
             sudo systemctl status eati --no-pager -l
