@@ -1,8 +1,8 @@
 package msyc.eati.repository
 
-import msyc.eati.adapter.out.persistence.repository.UserTastesRepository
-import msyc.eati.domain.model.User
-import msyc.eati.domain.model.UserTastes
+import msyc.eati.adapter.out.persistence.user.UserTastesRepository
+import msyc.eati.domain.user.model.User
+import msyc.eati.domain.user.model.UserTastes
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired

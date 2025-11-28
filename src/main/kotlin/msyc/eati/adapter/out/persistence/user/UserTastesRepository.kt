@@ -1,6 +1,6 @@
-package msyc.eati.adapter.out.persistence.repository
+package msyc.eati.adapter.out.persistence.user
 
-import msyc.eati.domain.model.UserTastes
+import msyc.eati.domain.user.model.UserTastes
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository

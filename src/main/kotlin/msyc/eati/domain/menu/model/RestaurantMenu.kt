@@ -1,24 +1,32 @@
-package msyc.eati.domain.model
+package msyc.eati.domain.menu.model
 
 import jakarta.persistence.*
 import msyc.eati.common.util.IdGenerator
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
+
 @Entity
-@Table(name = "restaurants")
-data class Restaurant(
+@Table(name = "restaurant_menus")
+data class RestaurantMenu(
     @Id
-    @Column(name = "restaurant_id", length = 10, nullable = false, updatable = false)
+    @Column(name = "restaurant_menu_id", length = 10, nullable = false, updatable = false)
+    var restaurantMenuId: String? = null,
+
+    @Column(name = "menu_id", length = 10, nullable = false)
+    var menuId: String? = null,
+
+    @Column(name = "restaurant_id", length = 10, nullable = false)
     var restaurantId: String? = null,
 
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "category_id", length = 10, nullable = false)
     var categoryId: String? = null,
 
     @Column(nullable = false)
     var name: String,
 
-    @Column(nullable = false)
-    var address: String,
+    @Column(nullable = false, precision = 10, scale = 2)
+    var price: BigDecimal,
 
     @Column(columnDefinition = "text")
     var description: String? = null,
@@ -34,7 +42,7 @@ data class Restaurant(
 ) {
     @PrePersist
     fun prePersist() {
-        if (restaurantId == null) restaurantId = IdGenerator.generate()
+        if (menuId == null) menuId = IdGenerator.generate()
         val now = LocalDateTime.now()
         createdAt = now
         updatedAt = now
