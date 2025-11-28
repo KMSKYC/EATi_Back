@@ -3,7 +3,7 @@ name: Deploy EATi to OCI
 on:
   push:
     branches:
-      - "main"     # main에 push 시 자동 배포
+      - "main"
 
 jobs:
   build-and-deploy:
@@ -32,15 +32,13 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean bootJar
 
-      # Actions 런너 안에서 SSH 키 세팅
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.OCI_SSH_KEY }}" > ~/.ssh/eati_key
           chmod 600 ~/.ssh/eati_key
 
-      # 1단계: jar를 opc 홈 디렉토리 아래로 복사
-      - name: Copy jar to OCI server (to opc home)
+      - name: Copy jar to OCI server
         run: |
           scp -o StrictHostKeyChecking=no \
               -i ~/.ssh/eati_key \
@@ -48,8 +46,7 @@ jobs:
               build/libs/*.jar \
               ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:/home/opc/eati-deploy/
 
-      # 2단계: 서버 안에서 /srv/eati/app.jar 로 옮기고 서비스 재시작
-      - name: Move jar and restart eati service
+      - name: Deploy and restart service
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.OCI_HOST }}
@@ -59,16 +56,35 @@ jobs:
           script: |
             set -e
 
+            # 배포 디렉토리 준비
+            mkdir -p /home/opc/eati-deploy
             cd /home/opc/eati-deploy
 
-            # 가장 최근 jar 선택
+            # 최신 JAR 파일 확인
             LATEST_JAR=$(ls -t *.jar | head -n 1)
             echo "Using JAR: $LATEST_JAR"
 
-            # /srv/eati 로 이동해서 app.jar로 교체
+            # 기존 서비스 중지
+            sudo systemctl stop eati
+
+            # JAR 파일 교체
             sudo mv "/home/opc/eati-deploy/$LATEST_JAR" /srv/eati/app.jar
             sudo chown eati:eati /srv/eati/app.jar
+            sudo chmod 755 /srv/eati/app.jar
+            sudo restorecon -v /srv/eati/app.jar
+
+            # 임시 파일 정리
+            rm -f /home/opc/eati-deploy/*.jar
 
             # 서비스 재시작
-            sudo systemctl restart eati
+            sudo systemctl start eati
+            sleep 5
             sudo systemctl status eati --no-pager -l
+
+            # NGINX 재시작
+            sudo systemctl restart nginx
+
+            # 배포 확인
+            curl -f http://localhost:8080/health || echo "Spring Boot 응답 실패"
+            sleep 2
+            curl -f http://localhost/ || echo "NGINX 프록시 실패"

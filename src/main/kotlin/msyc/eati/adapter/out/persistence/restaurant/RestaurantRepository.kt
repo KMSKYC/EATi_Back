@@ -1,6 +1,6 @@
-package msyc.eati.adapter.out.persistence.menu
+package msyc.eati.adapter.out.persistence.restaurant
 
-import msyc.eati.domain.menu.model.Restaurant
+import msyc.eati.domain.restaurant.model.Restaurant
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
@@ -9,10 +9,4 @@ import java.util.*
 
 @Repository
 interface RestaurantRepository : JpaRepository<Restaurant, String> {
-    fun findByName(name: String): Optional<Restaurant>
-    fun existsByName(name: String): Boolean
-
-    @Modifying
-    @Transactional
-    fun deleteByName(name: String)
 }
