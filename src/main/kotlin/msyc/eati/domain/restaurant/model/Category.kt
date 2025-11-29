@@ -16,6 +16,9 @@ data class Category(
     @Column(name = "category_id", length = 10, nullable = false, updatable = false)
     var categoryId: String? = null,
 
+    @Column(name = "parent_id", length = 10, nullable = false)
+    var parentId: String? = null,
+
     @Column(nullable = false)
     var name: String,
 
