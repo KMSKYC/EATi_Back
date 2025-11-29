@@ -42,7 +42,7 @@ data class RestaurantMenu(
 ) {
     @PrePersist
     fun prePersist() {
-        if (menuId == null) menuId = IdGenerator.generate()
+        if (restaurantMenuId == null) restaurantMenuId = IdGenerator.generate()
         val now = LocalDateTime.now()
         createdAt = now
         updatedAt = now

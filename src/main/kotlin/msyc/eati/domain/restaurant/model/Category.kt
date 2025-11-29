@@ -1,4 +1,4 @@
-package msyc.eati.domain.menu.model
+package msyc.eati.domain.restaurant.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
