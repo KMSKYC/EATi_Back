@@ -2,20 +2,16 @@ spring:
   application:
     name: eati
 
-  # Supabase PostgreSQL 설정
   datasource:
     url: ${JDBC_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      connection-timeout: 30000
+      maximum-pool-size: 5
+      minimum-idle: 1
 
-  # JPA/Hibernate 설정
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     show-sql: true
@@ -23,8 +19,9 @@ spring:
       hibernate:
         format_sql: true
 
-  # R2DBC 설정 (for reactive operations)
-  r2dbc:
-    url: ${R2DBC_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+spring.jpa.open-in-view: false
+
+management:
+  health:
+    db:
+      enabled: false
