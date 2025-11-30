@@ -10,7 +10,7 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication(exclude = [
 	RedisAutoConfiguration::class,
-	SecurityAutoConfiguration::class,
+	SecurityAutoConfiguration::class,               // 커스텀 Security 설정 사용 (SecurityConfig)
 	ReactiveSecurityAutoConfiguration::class,
 	ManagementWebSecurityAutoConfiguration::class,
 	ReactiveManagementWebSecurityAutoConfiguration::class
