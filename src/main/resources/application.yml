@@ -28,8 +28,8 @@ spring:
         order_inserts: false
         order_updates: false
         query:
-          plan_cache_max_size: 0
-          plan_parameter_metadata_max_size: 0
+          plan_cache_max_size: 64
+          plan_parameter_metadata_max_size: 64
 
 spring.jpa.open-in-view: false
 
