@@ -64,9 +64,15 @@ class SecurityConfig(
                 authorize
                     // 인증 없이 접근 가능한 경로
                     .requestMatchers(
-                        "/api/auth/**",   // 회원가입, 로그인
-                        "/actuator/**",                 // 헬스체크
-                        "/error"                        // 에러 페이지
+                        "/", // 메인화면
+                        "/index.html", // 인덱스 페이지
+                        "/api/auth/**", // 회원가입, 로그인
+                        "/actuator/**", // 헬스체크
+                        "/error", // 에러 페이지
+                        "/static/**", // 정적 리소스
+                        "/css/**", // CSS 파일
+                        "/js/**", // JavaScript 파일
+                        "/images/**" // 이미지 파일
                     ).permitAll()
                     // 그 외 모든 요청은 인증 필요
                     .anyRequest().authenticated()
