@@ -1,23 +1,27 @@
-package msyc.eati.domain.menu.model
+package msyc.eati.domain.restaurant.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import msyc.eati.common.util.IdGenerator
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "category")
-data class Category(
+@Table(name = "restaurants")
+data class Restaurant(
     @Id
-    @Column(name = "category_id", length = 10, nullable = false, updatable = false)
+    @Column(name = "restaurant_id", length = 10, nullable = false, updatable = false)
+    var restaurantId: String? = null,
+
+    @Column(name = "category_id", nullable = false)
     var categoryId: String? = null,
 
     @Column(nullable = false)
     var name: String,
+
+    @Column(nullable = false)
+    var address: String,
+
+    @Column(columnDefinition = "text")
+    var description: String? = null,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime,
@@ -30,7 +34,7 @@ data class Category(
 ) {
     @PrePersist
     fun prePersist() {
-        if (categoryId == null) categoryId = IdGenerator.generate()
+        if (restaurantId == null) restaurantId = IdGenerator.generate()
         val now = LocalDateTime.now()
         createdAt = now
         updatedAt = now

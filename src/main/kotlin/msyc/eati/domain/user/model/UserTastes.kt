@@ -13,12 +13,12 @@ data class UserTastes(
     var userId: String? = null,
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "liked_category_ids")
-    var likedCategoryIds: List<String>? = null,
+    @Column(name = "liked_category_ids", nullable = false, columnDefinition = "jsonb")
+    var likedCategoryIds: List<String>,
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "disliked_category_ids")
-    var disLikedCategoryIds: List<String>? = null,
+    @Column(name = "disliked_category_ids", nullable = false, columnDefinition = "jsonb")
+    var dislikedCategoryIds: List<String>,
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "recent_menus")
