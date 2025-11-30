@@ -8,8 +8,13 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 5
-      minimum-idle: 1
+      maximum-pool-size: 10     # 트래픽 증가 대비 (5→10)
+      minimum-idle: 2           # 기본 연결 증가 (1→2)
+      connection-timeout: 30000
+      max-lifetime: 300000      # 5분 (pgBouncer 최적화)
+      idle-timeout: 180000      # 3분 (빠른 연결 반환)
+      auto-commit: true
+      leak-detection-threshold: 60000  # 1분 (연결 누수 감지)
 
   jpa:
     hibernate:
@@ -18,6 +23,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: 0
+        order_inserts: false
+        order_updates: false
+        query:
+          plan_cache_max_size: 64
+          plan_parameter_metadata_max_size: 64
 
 spring.jpa.open-in-view: false
 
