@@ -1,4 +1,4 @@
-package msyc.eati.adapter.out.persistence.menu
+package msyc.eati.adapter.outbound.persistence.menu
 
 import msyc.eati.domain.menu.model.Menu
 import org.springframework.data.jpa.repository.JpaRepository
