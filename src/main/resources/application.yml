@@ -25,3 +25,8 @@ management:
   health:
     db:
       enabled: false
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 86400000  # 24시간 (밀리초)
+  refresh-token-expiration: 604800000  # 7일 (밀리초)

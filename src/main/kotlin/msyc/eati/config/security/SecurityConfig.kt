@@ -1,0 +1,79 @@
+package msyc.eati.config.security
+
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+
+/**
+ * Spring Security 설정
+ * - JWT 기반 인증 설정
+ * - CSRF 비활성화 (REST API이므로)
+ * - Stateless 세션 관리
+ * - 권한별 접근 제어
+ */
+@Configuration
+@EnableWebSecurity  // Spring Security 활성화
+@EnableMethodSecurity  // 메서드 레벨 보안 활성화 (@PreAuthorize, @Secured 등 사용 가능)
+class SecurityConfig(
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+    private val customUserDetailsService: CustomUserDetailsService
+) {
+
+    /**
+     * 비밀번호 암호화 인코더
+     * BCrypt 해싱 알고리즘 사용 (단방향 암호화)
+     */
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
+
+    /**
+     * 인증 관리자
+     * 로그인 시 사용자 인증을 처리
+     */
+    @Bean
+    fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager {
+        return authenticationConfiguration.authenticationManager
+    }
+
+    /**
+     * Security 필터 체인 설정
+     * HTTP 보안 설정의 핵심
+     */
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            // CSRF 보호 비활성화 (REST API는 stateless이므로 불필요)
+            .csrf { it.disable() }
+
+            // 세션 사용 안 함 (JWT 토큰 기반 인증)
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+
+            // URL별 접근 권한 설정
+            .authorizeHttpRequests { authorize ->
+                authorize
+                    // 인증 없이 접근 가능한 경로
+                    .requestMatchers(
+                        "/api/auth/**",   // 회원가입, 로그인
+                        "/actuator/**",                 // 헬스체크
+                        "/error"                        // 에러 페이지
+                    ).permitAll()
+                    // 그 외 모든 요청은 인증 필요
+                    .anyRequest().authenticated()
+            }
+            // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+
+        return http.build()
+    }
+}
