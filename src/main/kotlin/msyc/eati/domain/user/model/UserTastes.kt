@@ -25,7 +25,7 @@ data class UserTastes(
     var recentMenus: List<String>? = null,
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "restrictions")
+    @Column(name = "restrict_menus")
     var menuRestrictions: List<String>? = null,
 
     @Column(name = "created_at", nullable = false)
