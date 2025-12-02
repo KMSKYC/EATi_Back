@@ -15,7 +15,7 @@ data class Restaurant(
     var categoryId: String? = null,
 
     @Column(nullable = false)
-    var name: String,
+    var restaurantName: String,
 
     @Column(nullable = false)
     var address: String,

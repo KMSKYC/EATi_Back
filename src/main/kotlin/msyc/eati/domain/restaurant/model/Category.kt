@@ -20,7 +20,7 @@ data class Category(
     var parentId: String? = null,
 
     @Column(nullable = false)
-    var name: String,
+    var categoryName: String,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime,
