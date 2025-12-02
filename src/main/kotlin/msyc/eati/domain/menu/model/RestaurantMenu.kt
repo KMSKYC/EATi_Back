@@ -23,7 +23,7 @@ data class RestaurantMenu(
     var categoryId: String? = null,
 
     @Column(nullable = false)
-    var name: String,
+    var restaurantMenuName: String,
 
     @Column(nullable = false, precision = 10, scale = 2)
     var price: BigDecimal,

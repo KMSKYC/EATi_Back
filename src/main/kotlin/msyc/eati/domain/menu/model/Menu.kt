@@ -20,7 +20,7 @@ data class Menu(
     var categoryId: String? = null,
 
     @Column
-    var name: String? = null,
+    var menuName: String? = null,
 
     @Column(columnDefinition = "text")
     var description: String? = null,
