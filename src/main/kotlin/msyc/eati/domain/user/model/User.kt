@@ -11,7 +11,7 @@ import java.time.OffsetDateTime
  * - Spring Security 인증에 사용됨
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "webapp")
 data class User(
     @Id
     @Column(name = "user_id", nullable = false, updatable = false)

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 
 @Entity
-@Table(name = "restaurant_menus")
+@Table(name = "restaurant_menus", schema = "webapp")
 data class RestaurantMenu(
     @Id
     @Column(name = "restaurant_menu_id", length = 10, nullable = false, updatable = false)
@@ -23,7 +23,7 @@ data class RestaurantMenu(
     var categoryId: String? = null,
 
     @Column(nullable = false)
-    var name: String,
+    var restaurantMenuName: String,
 
     @Column(nullable = false, precision = 10, scale = 2)
     var price: BigDecimal,

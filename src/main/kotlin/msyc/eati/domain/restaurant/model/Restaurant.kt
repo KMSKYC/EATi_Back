@@ -5,7 +5,7 @@ import msyc.eati.common.util.IdGenerator
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurants", schema = "webapp")
 data class Restaurant(
     @Id
     @Column(name = "restaurant_id", length = 10, nullable = false, updatable = false)
@@ -15,7 +15,7 @@ data class Restaurant(
     var categoryId: String? = null,
 
     @Column(nullable = false)
-    var name: String,
+    var restaurantName: String,
 
     @Column(nullable = false)
     var address: String,

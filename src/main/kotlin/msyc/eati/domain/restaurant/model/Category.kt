@@ -10,7 +10,7 @@ import msyc.eati.common.util.IdGenerator
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "category")
+@Table(name = "category", schema = "webapp")
 data class Category(
     @Id
     @Column(name = "category_id", length = 10, nullable = false, updatable = false)
@@ -20,7 +20,7 @@ data class Category(
     var parentId: String? = null,
 
     @Column(nullable = false)
-    var name: String,
+    var categoryName: String,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime,

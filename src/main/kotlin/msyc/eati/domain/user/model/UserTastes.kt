@@ -6,7 +6,7 @@ import org.hibernate.type.SqlTypes
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "users_tastes")
+@Table(name = "users_tastes", schema = "webapp")
 data class UserTastes(
     @Id
     @Column(name = "user_id", length = 10, nullable = false, updatable = false)
@@ -25,7 +25,7 @@ data class UserTastes(
     var recentMenus: List<String>? = null,
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "restrictions")
+    @Column(name = "restrict_menus")
     var menuRestrictions: List<String>? = null,
 
     @Column(name = "created_at", nullable = false)
