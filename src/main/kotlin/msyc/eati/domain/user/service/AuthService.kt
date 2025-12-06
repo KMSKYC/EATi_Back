@@ -42,12 +42,12 @@ class AuthService(
         // User 엔티티 생성
         val user = User(
             email = request.email,
-            password = passwordEncoder.encode(request.password),  // BCrypt로 비밀번호 암호화
+            userPassword = passwordEncoder.encode(request.password),  // BCrypt로 비밀번호 암호화
             nickname = request.nickname,
             birthdate = request.birthdate,
             gender = request.gender,
             region = request.region,
-            role = UserRole.USER,   // 기본 권한은 USER
+            userRole = UserRole.USER,   // 기본 권한은 USER
             status = "ACTIVE"       // 기본 상태는 ACTIVE
         )
 
@@ -62,7 +62,7 @@ class AuthService(
             birthdate = savedUser.birthdate,
             gender = savedUser.gender,
             region = savedUser.region,
-            role = savedUser.role
+            role = savedUser.userRole
         )
     }
 
@@ -87,7 +87,7 @@ class AuthService(
         val accessToken = jwtTokenProvider.generateAccessToken(
             userId = user.userId!!,
             email = user.email,
-            role = user.role.name
+            role = user.userRole.name
         )
 
         val refreshToken = jwtTokenProvider.generateRefreshToken(user.userId!!)
@@ -113,7 +113,7 @@ class AuthService(
             birthdate = user.birthdate,
             gender = user.gender,
             region = user.region,
-            role = user.role
+            role = user.userRole
         )
     }
 }

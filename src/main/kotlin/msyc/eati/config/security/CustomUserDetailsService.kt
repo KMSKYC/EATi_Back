@@ -27,12 +27,12 @@ class CustomUserDetailsService(
             .orElseThrow { UsernameNotFoundException("사용자를 찾을 수 없습니다: $email") }
 
         // 권한 정보 생성 (ROLE_ 접두사 필요)
-        val authorities = listOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
+        val authorities = listOf(SimpleGrantedAuthority("ROLE_${user.userRole.name}"))
 
         // Spring Security의 UserDetails 객체 생성
         return User.builder()
             .username(user.email) // 이메일을 username으로 사용
-            .password(user.password) // 암호화된 비밀번호
+            .password(user.userPassword) // 암호화된 비밀번호
             .authorities(authorities) // 권한 목록
             .accountExpired(false) // 계정 만료 여부
             .accountLocked(user.status == "LOCKED") // 계정 잠김 여부
