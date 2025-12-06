@@ -6,7 +6,7 @@ import org.hibernate.type.SqlTypes
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "users_tastes")
+@Table(name = "users_tastes", schema = "webapp")
 data class UserTastes(
     @Id
     @Column(name = "user_id", length = 10, nullable = false, updatable = false)
