@@ -18,10 +18,10 @@ data class User(
     var userId: String? = null,
 
     @Column(nullable = false)
-    var email: String,
+    var userPassword: String,
 
     @Column(nullable = false)
-    var password: String,
+    var email: String,
 
     @Column(nullable = false)
     var status: String,
@@ -40,7 +40,7 @@ data class User(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    var role: UserRole = UserRole.USER,
+    var userRole: UserRole = UserRole.USER,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: OffsetDateTime? = null,
