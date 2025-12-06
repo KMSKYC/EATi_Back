@@ -20,7 +20,6 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        default_schema: ${DB_SCHEMA}
         format_sql: true
         jdbc:
           batch_size: 0

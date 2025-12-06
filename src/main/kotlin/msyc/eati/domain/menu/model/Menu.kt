@@ -10,7 +10,7 @@ import msyc.eati.common.util.IdGenerator
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "menus")
+@Table(name = "menus", schema = "webapp")
 data class Menu(
     @Id
     @Column(name = "menu_id", length = 10, nullable = false, updatable = false)
