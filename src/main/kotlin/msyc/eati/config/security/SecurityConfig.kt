@@ -52,12 +52,18 @@ class SecurityConfig(
      */
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http
+        return http
             // CSRF 보호 비활성화 (REST API는 stateless이므로 불필요)
-            .csrf { it.disable() }
+            .csrf { csrf -> csrf.disable() }
 
             // 세션 사용 안 함 (JWT 토큰 기반 인증)
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .sessionManagement { session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+
+            // formLogin, httpBasic 비활성화
+            .formLogin { it.disable() }
+            .httpBasic { it.disable() }
 
             // URL별 접근 권한 설정
             .authorizeHttpRequests { authorize ->
@@ -77,9 +83,10 @@ class SecurityConfig(
                     // 그 외 모든 요청은 인증 필요
                     .anyRequest().authenticated()
             }
+
             // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
-        return http.build()
+            .build()
     }
 }
