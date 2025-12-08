@@ -17,10 +17,11 @@ class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
             .allowedOrigins(
-                "http://localhost:3000",      // 로컬 개발환경
-                "http://localhost:5173",      // Vite 기본 포트
-                "http://134.185.96.179",      // OCI 서버
-                "https://134.185.96.179"      // HTTPS
+                "http://localhost:3000",   // 로컬 개발환경
+                "http://localhost:5173",                // Vite 기본 포트
+                "http://134.185.96.179",                // OCI 서버
+                "https://134.185.96.179",               // HTTPS
+                "https://eatiweb.vercel.app/"           // 프론트
             )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
             .allowedHeaders("*")
