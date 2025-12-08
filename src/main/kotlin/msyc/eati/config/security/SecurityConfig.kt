@@ -53,6 +53,9 @@ class SecurityConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
+            // CORS 설정 (Spring Security 레벨)
+            .cors { }
+
             // CSRF 보호 비활성화 (REST API는 stateless이므로 불필요)
             .csrf { csrf -> csrf.disable() }
 
