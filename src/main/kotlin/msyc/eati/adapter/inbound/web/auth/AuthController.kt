@@ -44,8 +44,11 @@ class AuthController(
      */
     @GetMapping("/me")
     fun getCurrentUser(
-        @AuthenticationPrincipal userDetails: UserDetails
+        @AuthenticationPrincipal userDetails: UserDetails?
     ): ResponseEntity<UserResponse> {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        }
         val userResponse = authService.getCurrentUser(userDetails.username)
         return ResponseEntity.ok(userResponse)
     }
