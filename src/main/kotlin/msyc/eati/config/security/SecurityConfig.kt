@@ -52,7 +52,7 @@ class SecurityConfig(
      */
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http
+        return http
             // CSRF 보호 비활성화 (REST API는 stateless이므로 불필요)
             .csrf { csrf -> csrf.disable() }
 
@@ -87,6 +87,6 @@ class SecurityConfig(
             // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
-        return http.build()
+            .build()
     }
 }
