@@ -77,6 +77,7 @@ class SecurityConfig(
                         "/index.html", // 인덱스 페이지
                         "/api/auth/**", // 회원가입, 로그인
                         "/api/categories/**", // 카테고리 조회
+                        "/api/menus/**", // 메뉴 조회
                         "/actuator/**", // 헬스체크
                         "/error", // 에러 페이지
                         "/static/**", // 정적 리소스
