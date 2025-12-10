@@ -1,11 +1,50 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EATi</title>
+    <style>
+        body {
+            max-width: 600px;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 0 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1d1d1f;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+        }
+        .tagline {
+            font-size: 17px;
+            color: #1d1d1f;
+            margin: 0 0 8px 0;
+        }
+        .status {
+            font-size: 14px;
+            color: #86868b;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <img src="/images/logo.png" alt="EATi">
+    <h1>EATi</h1>
+    <p class="tagline">특별한 한끼를, 고민 대신 추천으로!</p>
+    <p class="status">API server is running.</p>
 </body>
 </html>

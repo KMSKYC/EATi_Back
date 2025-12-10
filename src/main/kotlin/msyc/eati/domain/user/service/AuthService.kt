@@ -1,5 +1,6 @@
 package msyc.eati.domain.user.service
 
+import msyc.eati.adapter.inbound.web.auth.dto.EmailCheckResponse
 import msyc.eati.adapter.inbound.web.auth.dto.LoginRequest
 import msyc.eati.adapter.inbound.web.auth.dto.SignUpRequest
 import msyc.eati.adapter.inbound.web.auth.dto.TokenResponse
@@ -114,6 +115,21 @@ class AuthService(
             gender = user.gender,
             region = user.region,
             role = user.userRole
+        )
+    }
+
+    /**
+     * 이메일 중복 확인
+     * 회원가입 전 이메일 사용 가능 여부를 확인
+     */
+    @Transactional(readOnly = true)
+    fun checkEmailAvailability(email: String): EmailCheckResponse {
+        val exists = userRepository.existsByEmail(email)
+
+        return EmailCheckResponse(
+            email = email,
+            available = !exists,
+            message = if (exists) "이미 사용 중인 이메일입니다" else "사용 가능한 이메일입니다"
         )
     }
 }

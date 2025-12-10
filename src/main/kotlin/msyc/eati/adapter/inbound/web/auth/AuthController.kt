@@ -1,6 +1,9 @@
 package msyc.eati.adapter.inbound.web.auth
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.validation.Valid
+import msyc.eati.adapter.inbound.web.auth.dto.EmailCheckRequest
+import msyc.eati.adapter.inbound.web.auth.dto.EmailCheckResponse
 import msyc.eati.adapter.inbound.web.auth.dto.LoginRequest
 import msyc.eati.adapter.inbound.web.auth.dto.SignUpRequest
 import msyc.eati.adapter.inbound.web.auth.dto.TokenResponse
@@ -11,6 +14,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
+
+private val log = KotlinLogging.logger {}
 
 /**
  * 인증 관련 API 컨트롤러
@@ -51,5 +56,16 @@ class AuthController(
         }
         val userResponse = authService.getCurrentUser(userDetails.username)
         return ResponseEntity.ok(userResponse)
+    }
+
+    /**
+     * 이메일 중복 확인
+     */
+    @PostMapping("/check-email")
+    fun checkEmail(
+        @Valid @RequestBody request: EmailCheckRequest
+    ): ResponseEntity<EmailCheckResponse> {
+        val response = authService.checkEmailAvailability(request.email)
+        return ResponseEntity.ok(response)
     }
 }

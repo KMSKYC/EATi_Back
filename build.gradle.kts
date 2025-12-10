@@ -41,6 +41,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("com.aventrix.jnanoid:jnanoid:2.0.0")
+	implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
 
 	// JWT
 	implementation("io.jsonwebtoken:jjwt-api:0.12.6")

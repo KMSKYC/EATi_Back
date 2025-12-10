@@ -1,5 +1,6 @@
 package msyc.eati.config.exception
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
@@ -7,6 +8,8 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+
+private val log = KotlinLogging.logger {}
 
 /**
  * 전역 예외 처리 핸들러
@@ -19,6 +22,7 @@ class GlobalExceptionHandler {
      */
     @ExceptionHandler(AuthenticationException::class, BadCredentialsException::class)
     fun handleAuthenticationException(ex: Exception): ResponseEntity<ErrorResponse> {
+        log.warn(ex) { "인증 실패: ${ex.message}" }
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .body(ErrorResponse(
@@ -37,6 +41,7 @@ class GlobalExceptionHandler {
             .map { "${it.field}: ${it.defaultMessage}" }
             .joinToString(", ")
 
+        log.warn { "Validation 실패: $errors" }
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse(
@@ -51,6 +56,7 @@ class GlobalExceptionHandler {
      */
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ErrorResponse> {
+        log.warn(ex) { "잘못된 요청: ${ex.message}" }
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse(
@@ -65,6 +71,7 @@ class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception::class)
     fun handleException(ex: Exception): ResponseEntity<ErrorResponse> {
+        log.error(ex) { "서버 오류 발생: ${ex.message}" }
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ErrorResponse(
