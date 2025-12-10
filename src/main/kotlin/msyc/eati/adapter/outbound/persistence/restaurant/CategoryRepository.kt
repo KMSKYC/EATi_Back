@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CategoryRepository : JpaRepository<Category, String> {
+    fun findAllByDeletedAtIsNull(): List<Category>
+    fun findAllByParentIdAndDeletedAtIsNull(parentId: String): List<Category>
 }
