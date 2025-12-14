@@ -9,6 +9,10 @@
 
 ---
 
+<img width="1421" height="681" alt="프로젝트구성도" src="https://github.com/user-attachments/assets/4afa4f03-5762-4ec8-93b5-66fa88608eae" />
+
+---
+
 ## 🎯 프로젝트 소개
 
 **EATi**는 AI 기반 점심 메뉴 추천 및 **함께 먹기 매칭** 서비스입니다.
