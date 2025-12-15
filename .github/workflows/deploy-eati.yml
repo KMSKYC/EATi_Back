@@ -99,10 +99,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.OCI_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
 
       - name: Add OCI server to known hosts
         run: |
@@ -111,12 +110,12 @@ jobs:
 
       - name: Copy docker-compose.yml to OCI server
         run: |
-          ssh -i ~/.ssh/id_rsa -p ${{ secrets.OCI_PORT }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }} "mkdir -p ~/eati-deploy"
-          scp -i ~/.ssh/id_rsa -P ${{ secrets.OCI_PORT }} docker-compose.yml ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:~/eati-deploy/
+          ssh -p ${{ secrets.OCI_PORT }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }} "mkdir -p ~/eati-deploy"
+          scp -P ${{ secrets.OCI_PORT }} docker-compose.yml ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:~/eati-deploy/
 
       - name: Deploy on OCI server
         run: |
-          ssh -i ~/.ssh/id_rsa -p ${{ secrets.OCI_PORT }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }} << 'ENDSSH'
+          ssh -p ${{ secrets.OCI_PORT }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }} << 'ENDSSH'
             cd ~/eati-deploy
 
             # Login to GHCR
@@ -140,7 +139,7 @@ jobs:
 
       - name: Verify deployment
         run: |
-          ssh -i ~/.ssh/id_rsa -p ${{ secrets.OCI_PORT }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }} << 'ENDSSH'
+          ssh -p ${{ secrets.OCI_PORT }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }} << 'ENDSSH'
             cd ~/eati-deploy
 
             echo "Waiting for services to start..."
