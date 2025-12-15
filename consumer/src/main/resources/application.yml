@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: eati-consumer
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: eati-user-events-consumer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://mongodb:27017/eati}
+      database: eati
+
+kafka:
+  topic:
+    user-events: eati-user-events
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  health:
+    kafka:
+      enabled: true
+    mongo:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    msyc.eati.consumer: DEBUG
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN

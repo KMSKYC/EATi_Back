@@ -18,6 +18,7 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+    open-in-view: false
     properties:
       hibernate:
         format_sql: true
@@ -29,12 +30,22 @@ spring:
           plan_cache_max_size: 64
           plan_parameter_metadata_max_size: 64
 
-spring.jpa.open-in-view: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9093}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      retries: 3
 
 management:
   health:
     db:
       enabled: false
+
+kafka:
+  topic:
+    user-events: eati-user-events
 
 jwt:
   secret: ${JWT_SECRET}
