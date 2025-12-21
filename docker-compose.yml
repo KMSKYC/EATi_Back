@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/eati-backend:latest
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/eati-back:latest
     container_name: eati-app
     restart: unless-stopped
     ports:
