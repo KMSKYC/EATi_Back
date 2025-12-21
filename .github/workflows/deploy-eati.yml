@@ -57,19 +57,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SSH key
+      - name: Setup SSH key and prepare docker-compose.yml
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.OCI_SSH_KEY }}" > ~/.ssh/eati_key
           chmod 600 ~/.ssh/eati_key
+
+          # repository owner를 소문자로 변환하여 docker-compose.yml 수정
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          sed "s/\${GITHUB_REPOSITORY_OWNER}/${REPO_OWNER_LOWER}/g" docker-compose.yml > docker-compose-deploy.yml
 
       - name: Copy docker-compose.yml to OCI server
         run: |
           scp -o StrictHostKeyChecking=no \
               -i ~/.ssh/eati_key \
               -P ${{ secrets.OCI_PORT }} \
-              docker-compose.yml \
-              ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:/home/opc/eati-deploy/
+              docker-compose-deploy.yml \
+              ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:/home/opc/eati-deploy/docker-compose.yml
 
       - name: Deploy to OCI server
         uses: appleboy/ssh-action@v1.1.0
@@ -85,16 +89,14 @@ jobs:
             cd /home/opc/eati-deploy
 
             # 환경 변수 파일 생성
-            REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-            cat > .env << EOF
-            GITHUB_REPOSITORY_OWNER=${REPO_OWNER_LOWER}
-            JDBC_URL=${{ secrets.JDBC_URL }}
-            DB_USERNAME=${{ secrets.DB_USERNAME }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-            SPRING_PROFILES_ACTIVE=prod
-            EOF
+            cat > .env << 'EOF'
+JDBC_URL=${{ secrets.JDBC_URL }}
+DB_USERNAME=${{ secrets.DB_USERNAME }}
+DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+JWT_SECRET=${{ secrets.JWT_SECRET }}
+REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+SPRING_PROFILES_ACTIVE=prod
+EOF
 
             # GitHub Container Registry 로그인
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
