@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  app:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/eati-back:latest
+    container_name: eati-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # 데이터베이스 설정
+      JDBC_URL: ${JDBC_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # JWT 설정
+      JWT_SECRET: ${JWT_SECRET}
+
+      # Redis 설정
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+
+      # 애플리케이션 설정
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - eati-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  redis:
+    image: redis:7-alpine
+    container_name: eati-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: >
+      sh -c "
+      if [ -n \"$REDIS_PASSWORD\" ]; then
+        redis-server --requirepass $REDIS_PASSWORD --maxmemory 256mb --maxmemory-policy allkeys-lru
+      else
+        redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+      fi
+      "
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+    volumes:
+      - redis-data:/data
+    networks:
+      - eati-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  eati-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local

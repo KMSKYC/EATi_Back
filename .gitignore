@@ -59,3 +59,6 @@ HELP.md
 ### Application Properties (if contains sensitive info) ###
 # application-local.properties
 # application-dev.properties
+
+### Docker ###
+docker-compose-deploy.yml

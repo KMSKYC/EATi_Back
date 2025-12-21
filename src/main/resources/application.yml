@@ -29,12 +29,29 @@ spring:
           plan_cache_max_size: 64
           plan_parameter_metadata_max_size: 64
 
-spring.jpa.open-in-view: false
+  jpa.open-in-view: false
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: -1ms
+      timeout: 3000ms
 
 management:
   health:
     db:
       enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
 
 jwt:
   secret: ${JWT_SECRET}
