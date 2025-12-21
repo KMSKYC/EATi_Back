@@ -57,6 +57,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.OCI_SSH_KEY }}" > ~/.ssh/eati_key
+          chmod 600 ~/.ssh/eati_key
+
+      - name: Copy docker-compose.yml to OCI server
+        run: |
+          scp -o StrictHostKeyChecking=no \
+              -i ~/.ssh/eati_key \
+              -P ${{ secrets.OCI_PORT }} \
+              docker-compose.yml \
+              ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }}:/home/opc/eati-deploy/
+
       - name: Deploy to OCI server
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -67,14 +81,8 @@ jobs:
           script: |
             set -e
 
-            # 배포 디렉토리 준비
-            mkdir -p /home/opc/eati-deploy
+            # 배포 디렉토리로 이동
             cd /home/opc/eati-deploy
-
-            # docker-compose.yml 생성
-            cat > docker-compose.yml << 'EOF'
-            ${{ secrets.DOCKER_COMPOSE_CONTENT }}
-            EOF
 
             # 환경 변수 파일 생성
             REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
