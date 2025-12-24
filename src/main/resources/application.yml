@@ -8,11 +8,11 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 4
-      minimum-idle: 1
-      max-lifetime: 60000             # 1분
-      idle-timeout: 30000             # 30초
-      leak-detection-threshold: 15000 # 1분
+      maximum-pool-size: 20
+      minimum-idle: 5
+      max-lifetime: 1800000           # 30분
+      idle-timeout: 600000            # 10분
+      leak-detection-threshold: 60000 # 1분
 
   jpa:
     hibernate:
