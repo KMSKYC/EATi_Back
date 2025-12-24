@@ -9,7 +9,7 @@
 
 ---
 
-<img width="1421" height="681" alt="프로젝트구성도" src="https://github.com/user-attachments/assets/4afa4f03-5762-4ec8-93b5-66fa88608eae" />
+<img width="866" height="334" alt="image" src="https://github.com/user-attachments/assets/7609fdae-0977-4d19-858f-efe134d6b5a3" />
 
 ---
 
