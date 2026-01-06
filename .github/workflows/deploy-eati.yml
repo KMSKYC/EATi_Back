@@ -109,7 +109,7 @@ jobs:
             cd /home/opc/eati-deploy
 
             # 환경 변수 파일 생성
-            echo "JDBC_URL=${{ secrets.JDBC_URL }}" > .env
+            echo "POSTGRES_DB=eati" > .env
             echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
