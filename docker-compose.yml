@@ -1,6 +1,27 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eati-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-eati}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - eati-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${POSTGRES_DB:-eati}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/eati-back:latest
     container_name: eati-app
@@ -9,7 +30,7 @@ services:
       - "8080:8080"
     environment:
       # 데이터베이스 설정
-      JDBC_URL: ${JDBC_URL}
+      JDBC_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-eati}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
 
@@ -24,6 +45,8 @@ services:
       # 애플리케이션 설정
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
     networks:
@@ -66,5 +89,7 @@ networks:
     driver: bridge
 
 volumes:
+  postgres-data:
+    driver: local
   redis-data:
     driver: local
