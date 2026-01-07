@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 
 @Entity
-@Table(name = "restaurant_menus", schema = "webapp")
+@Table(name = "restaurant_menus", schema = "eati")
 data class RestaurantMenu(
     @Id
     @Column(name = "restaurant_menu_id", length = 10, nullable = false, updatable = false)
