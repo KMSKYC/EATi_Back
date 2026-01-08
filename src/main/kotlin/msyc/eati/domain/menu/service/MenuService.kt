@@ -37,9 +37,17 @@ class MenuService(
      * 메뉴 단건 조회
      */
     fun getMenu(menuId: String): MenuResponse {
-        log.info { "메뉴 단건 조회: menuId=$menuId" }
         val menu = menuRepository.findByMenuIdAndDeletedAtIsNull(menuId)
             ?: throw IllegalArgumentException("메뉴를 찾을 수 없습니다: $menuId")
+        return menu.toResponse()
+    }
+
+    /**
+     * 랜덤 메뉴 조회
+     */
+    fun getRandomMenu(): MenuResponse {
+        val menu = menuRepository.findRandomMenu()
+            ?: throw IllegalArgumentException("조회 가능한 메뉴가 없습니다")
         return menu.toResponse()
     }
 
