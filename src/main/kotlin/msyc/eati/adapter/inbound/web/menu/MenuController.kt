@@ -41,4 +41,13 @@ class MenuController(
         val menu = menuService.getMenu(menuId)
         return ResponseEntity.ok(menu)
     }
+
+    /**
+     * 메뉴 랜덤 조회
+     */
+    @GetMapping("random")
+    fun getRandomMenu(): ResponseEntity<MenuResponse> {
+        val menu = menuService.getRandomMenu()
+        return ResponseEntity.ok(menu)
+    }
 }
