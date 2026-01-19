@@ -1,7 +1,9 @@
 package msyc.eati.adapter.inbound.web.menu
 
 import msyc.eati.adapter.inbound.web.menu.dto.MenuResponse
+import msyc.eati.adapter.inbound.web.restaurantmenu.dto.RestaurantMenuResponse
 import msyc.eati.domain.menu.service.MenuService
+import msyc.eati.domain.menu.service.RestaurantMenuService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/menus")
 class MenuController(
-    private val menuService: MenuService
+    private val menuService: MenuService,
+    private val restaurantMenuService: RestaurantMenuService
 ) {
 
     /**
@@ -49,5 +52,16 @@ class MenuController(
     fun getRandomMenu(): ResponseEntity<MenuResponse> {
         val menu = menuService.getRandomMenu()
         return ResponseEntity.ok(menu)
+    }
+
+    /**
+     * 특정 메뉴를 판매하는 맛집 목록 조회
+     */
+    @GetMapping("/{menuId}/restaurants")
+    fun getRestaurantsByMenuId(
+        @PathVariable menuId: String
+    ): ResponseEntity<List<RestaurantMenuResponse>> {
+        val restaurants = restaurantMenuService.getRestaurantsByMenuId(menuId)
+        return ResponseEntity.ok(restaurants)
     }
 }
