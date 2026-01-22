@@ -85,6 +85,8 @@ class SecurityConfig(
                         "/js/**", // JavaScript 파일
                         "/images/**" // 이미지 파일
                     ).permitAll()
+                    // 관리자 전용 경로
+                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     // 그 외 모든 요청은 인증 필요
                     .anyRequest().authenticated()
             }
