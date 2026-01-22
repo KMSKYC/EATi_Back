@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface RestaurantRepository : JpaRepository<Restaurant, String> {
+    fun findAllByDeletedAtIsNull(): List<Restaurant>
+    fun findByRestaurantIdAndDeletedAtIsNull(restaurantId: String): Restaurant?
 }
