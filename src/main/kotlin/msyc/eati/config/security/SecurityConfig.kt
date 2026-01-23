@@ -77,6 +77,8 @@ class SecurityConfig(
                         "/index.html", // 인덱스 페이지
                         "/api/auth/**", // 회원가입, 로그인
                         "/api/categories/**", // 카테고리 조회
+                        "/api/restaurants/**", // 카테고리 조회
+                        "/api/restaurants-menu/**", // 카테고리 조회
                         "/api/menus/**", // 메뉴 조회
                         "/actuator/**", // 헬스체크
                         "/error", // 에러 페이지
@@ -85,6 +87,8 @@ class SecurityConfig(
                         "/js/**", // JavaScript 파일
                         "/images/**" // 이미지 파일
                     ).permitAll()
+                    // 관리자 전용 경로
+                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     // 그 외 모든 요청은 인증 필요
                     .anyRequest().authenticated()
             }

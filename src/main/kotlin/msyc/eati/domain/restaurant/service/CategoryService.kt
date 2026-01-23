@@ -1,11 +1,14 @@
 package msyc.eati.domain.restaurant.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import msyc.eati.adapter.inbound.web.admin.category.dto.CategoryCreateRequest
+import msyc.eati.adapter.inbound.web.admin.category.dto.CategoryUpdateRequest
 import msyc.eati.adapter.inbound.web.category.dto.CategoryResponse
 import msyc.eati.adapter.outbound.persistence.restaurant.CategoryRepository
 import msyc.eati.domain.restaurant.model.Category
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 private val log = KotlinLogging.logger {}
 
@@ -70,4 +73,59 @@ class CategoryService(
         parentId = this.parentId,
         categoryName = this.categoryName
     )
+
+    /**
+     * 카테고리 생성
+     */
+    @Transactional
+    fun createCategory(request: CategoryCreateRequest): CategoryResponse {
+        log.info { "카테고리 생성: ${request.categoryName}" }
+
+        val category = Category(
+            parentId = request.parentId,
+            categoryName = request.categoryName,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        val savedCategory = categoryRepository.save(category)
+        return savedCategory.toResponse()
+    }
+
+    /**
+     * 카테고리 수정
+     */
+    @Transactional
+    fun updateCategory(categoryId: String, request: CategoryUpdateRequest): CategoryResponse {
+        log.info { "카테고리 수정: categoryId=$categoryId" }
+
+        val category = categoryRepository.findById(categoryId)
+            .orElseThrow { IllegalArgumentException("카테고리를 찾을 수 없습니다: $categoryId") }
+
+        if (category.deletedAt != null) {
+            throw IllegalArgumentException("삭제된 카테고리입니다: $categoryId")
+        }
+
+        category.parentId = request.parentId
+        category.categoryName = request.categoryName
+
+        return category.toResponse()
+    }
+
+    /**
+     * 카테고리 삭제 (soft delete)
+     */
+    @Transactional
+    fun deleteCategory(categoryId: String) {
+        log.info { "카테고리 삭제: categoryId=$categoryId" }
+
+        val category = categoryRepository.findById(categoryId)
+            .orElseThrow { IllegalArgumentException("카테고리를 찾을 수 없습니다: $categoryId") }
+
+        if (category.deletedAt != null) {
+            throw IllegalArgumentException("이미 삭제된 카테고리입니다: $categoryId")
+        }
+
+        category.deletedAt = LocalDateTime.now()
+    }
 }
